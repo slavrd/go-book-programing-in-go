@@ -104,6 +104,7 @@ func getStats(numbers []float64) (stats statistics) {
 	stats.mean = sum(numbers) / float64(len(numbers))
 	stats.median = median(numbers)
 	stats.stdDev = stdDev(numbers)
+	stats.mode = mode(numbers)
 	return stats
 }
 
@@ -130,4 +131,39 @@ func stdDev(numbers []float64) float64 {
 		intsum += math.Pow(num-mean, 2)
 	}
 	return math.Sqrt(intsum / (float64(len(numbers)) - 1))
+}
+
+func mode(numbers []float64) []float64 {
+
+	result := make([]float64, 0)
+
+	// find out the number of occurrences of each number
+	occurrences := make(map[float64]int)
+	for _, num := range numbers {
+		occurrences[num]++
+	}
+
+	// find out the greatest number of occurrences
+	greatest := 0
+	for _, v := range occurrences {
+		if v > greatest {
+			greatest = v
+		}
+	}
+
+	// extracat the numbers with greatest occurrences
+	// and determine if all numbers occur equal amount of times
+	allEqual := true
+	for k, v := range occurrences {
+		if v == greatest {
+			result = append(result, k)
+		} else {
+			allEqual = false
+		}
+	}
+
+	if allEqual {
+		return make([]float64, 0)
+	}
+	return result
 }
